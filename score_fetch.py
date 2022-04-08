@@ -21,13 +21,11 @@ headers = {
     "x-rapidapi-key":  os.getenv('RAPIDAPI_KEY')
 }
 
-print("A")
+print("Starting request...")
 response = requests.request("GET", url, headers=headers, params=querystring)
-print("B")
+print("Getting request json data...")
 response_data_list = response.json().get("data")
-print("C")
-# print(response_data_list)
-
+print("Calculating hot tips...")
 
 def filter_by_country(country_code, data_json_list):
     filtered_list = []
@@ -57,7 +55,7 @@ def filter_one_difference_goal(data_json_list):
                         losing_team_last_5_matches_outcomes = (
                         get_team_last_matches_from_match(match_id, losing_team_id)
                     )
-                except TypeError:
+                except:
                     continue
 
                 win_rate_last_5_matches = calc_last_5_matches_win_rate(
