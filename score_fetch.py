@@ -75,7 +75,7 @@ def filter_one_difference_goal(data_json_list):
 
 print(f"having win_rate greater than {MIN_WIN_RATE}")
 for i in filter_one_difference_goal(response_data_list):
-   # for j in i.get("matches"):
+    # for j in i.get("matches"):
     try:
         fmt = "%Y%m%d%H%M%S"
         start_time = datetime.strptime(str(i["time"]["start"]), fmt)
@@ -88,12 +88,11 @@ for i in filter_one_difference_goal(response_data_list):
 
             team1_score = i["score"]["full_time"]["team_1"]
             team2_score = i["score"]["full_time"]["team_2"]
+            print("#################################################################")
 
             print(
-                f"{team1_name} having {team1_score} goals  X {team2_name} having {team2_score} goals"
+                f"{team1_name} having {team1_score} goals\nX\n{team2_name} having {team2_score} goals"
             )
-            print(
-                "#################################################################"
-            )
+            print("#################################################################")
     except Exception as e:
         print(f"Error while printing hot tips {e}")
