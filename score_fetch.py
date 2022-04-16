@@ -17,8 +17,8 @@ url = "https://livescore-football.p.rapidapi.com/soccer/live-matches"
 querystring = {"timezone_utc": "-3:00"}
 
 headers = {
-    "x-rapidapi-host": os.getenv('RAPIDAPI_HOST'),
-    "x-rapidapi-key":  os.getenv('RAPIDAPI_KEY')
+    "x-rapidapi-host": os.getenv("RAPIDAPI_HOST"),
+    "x-rapidapi-key": os.getenv("RAPIDAPI_KEY"),
 }
 
 print("Starting request...")
@@ -26,6 +26,7 @@ response = requests.request("GET", url, headers=headers, params=querystring)
 print("Getting request json data...")
 response_data_list = response.json().get("data")
 print("Calculating hot tips...")
+
 
 def filter_by_country(country_code, data_json_list):
     filtered_list = []
@@ -38,8 +39,8 @@ def filter_by_country(country_code, data_json_list):
 def filter_one_difference_goal(data_json_list):
     filtered_list = []
     for data in data_json_list:
-        list_of_matches_in_league = data.get("matches")
-        for match in list_of_matches_in_league:
+        list_of_all_matches = data.get("matches")
+        for match in list_of_all_matches:
             team1_score = match.get("score").get("full_time").get("team_1")
             team2_score = match.get("score").get("full_time").get("team_2")
 
@@ -52,7 +53,7 @@ def filter_one_difference_goal(data_json_list):
             if abs(int(team1_score) - int(team2_score)) == 1:
                 losing_team_id = team1_id if team1_score < team2_score else team2_id
                 try:
-                        losing_team_last_5_matches_outcomes = (
+                    losing_team_last_5_matches_outcomes = (
                         get_team_last_matches_from_match(match_id, losing_team_id)
                     )
                 except:
@@ -63,7 +64,7 @@ def filter_one_difference_goal(data_json_list):
                 )
 
                 if win_rate_last_5_matches > MIN_WIN_RATE:
-                    filtered_list.append(data)
+                    filtered_list.append(match)
 
     return filtered_list
 
@@ -74,18 +75,25 @@ def filter_one_difference_goal(data_json_list):
 
 print(f"having win_rate greater than {MIN_WIN_RATE}")
 for i in filter_one_difference_goal(response_data_list):
-    for j in i.get("matches"):
-        try:
-            fmt = "%Y%m%d%H%M%S"
-            start_time = datetime.strptime(str(j["time"]["start"]), fmt)
-            time_since_start = datetime.now() - start_time
-            minutes_since_start = (time_since_start.total_seconds())/60                                                                  
-            
-            if minutes_since_start > MIN_ELAPSED_TIME:
-                team1_name = j["team_1"]["name"]
-                team1_country = j["team_1"]["country"]
-                team2_name = j["team_2"]["name"]
-                team2_country = j["team_2"]["country"]
-                print(f"{team1_name} X {team2_name}")
-        except Exception as e:
-            print(e)
+   # for j in i.get("matches"):
+    try:
+        fmt = "%Y%m%d%H%M%S"
+        start_time = datetime.strptime(str(i["time"]["start"]), fmt)
+        time_since_start = datetime.now() - start_time
+        minutes_since_start = (time_since_start.total_seconds()) / 60
+
+        if minutes_since_start > MIN_ELAPSED_TIME:
+            team1_name = i["team_1"]["name"]
+            team2_name = i["team_2"]["name"]
+
+            team1_score = i["score"]["full_time"]["team_1"]
+            team2_score = i["score"]["full_time"]["team_2"]
+
+            print(
+                f"{team1_name} having {team1_score} goals  X {team2_name} having {team2_score} goals"
+            )
+            print(
+                "#################################################################"
+            )
+    except Exception as e:
+        print(f"Error while printing hot tips {e}")
