@@ -1,7 +1,7 @@
 import requests
 import os
 import json
-from team_data import get_team_last_matches_from_match, calc_last_5_matches_win_rate
+from data_analysis_soccer.team_data import get_team_last_matches_from_match, calc_last_5_matches_win_rate
 from datetime import datetime
 
 
