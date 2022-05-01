@@ -71,7 +71,7 @@ def filter_one_difference_goal(data_json_list):
 
 # print(filter_one_difference_goal(response_data_list))
 
-def lambda_handler(event, handler):
+def lambda_handler():
     matches = []
     for i in filter_one_difference_goal(response_data_list):
         # for j in i.get("matches"):
