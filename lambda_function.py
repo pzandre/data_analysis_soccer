@@ -7,7 +7,7 @@ from datetime import datetime
 
 COUNTRIES = ["germany", "greece", "england", "italy", "spain"]
 
-MIN_WIN_RATE = 0.5
+MIN_WIN_RATE = 0.7
 MIN_ELAPSED_TIME = 10
 
 url = "https://livescore-football.p.rapidapi.com/soccer/live-matches"
